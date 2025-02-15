@@ -994,7 +994,7 @@ class UtilMenu {
 		return [ { id: 'plain', name: translate('blockTextPlain') } ].concat(U.Prism.getTitles());
 	};
 
-	getObjectContainerSortOptions (type: I.ObjectContainerType, sortId: I.SortId, sortType: I.SortType, withOrphans: boolean, isCompact: boolean): any[] {
+	getObjectContainerSortOptions (type: I.ObjectContainerType, sortId: I.SortId, sortType: I.SortType, withOrphans: boolean, isCompact: boolean, hideSystemTypes: boolean, hideSystemRelations: boolean): any[] {
 		const appearance = [
 			{ name: translate('commonAppearance'), isSection: true },
 			{ id: I.SortId.List, checkbox: !isCompact, name: translate('widget2Name') },
@@ -1012,6 +1012,13 @@ class UtilMenu {
 				{ id: I.SortId.Name, name: translate('commonName'), relationKey: 'name', isSort: true, defaultType: I.SortType.Asc },
 				{ id: I.SortId.LastUsed, name: translate('sidebarObjectSortLastUsed'), relationKey: 'lastUsedDate', isSort: true, defaultType: I.SortType.Desc },
 			];
+			show = [
+				{ name: translate('sidebarObjectShow'), isSection: true },
+			];
+			show.push(type === I.ObjectContainerType.Type ?
+				{ id: I.SortId.SystemTypes, checkbox: hideSystemTypes, name: `Display System Types` } :
+				{ id: I.SortId.SystemRelations, checkbox: hideSystemRelations, name: `Display System Relations` });
+			show.push({isDiv: true});
 		} else {
 			show = [
 				{ name: translate('sidebarObjectShow'), isSection: true },

@@ -29,6 +29,8 @@ const SidebarObject = observer(class SidebarObject extends React.Component<{}, S
 	sortType: I.SortType = I.SortType.Desc;
 	orphan = false;
 	compact = false;
+	hideSystemTypes = false;
+	hideSystemRelations = false;
 	type: I.ObjectContainerType = I.ObjectContainerType.Object;
 	searchIds: string[] = null;
 	filter = '';
@@ -299,7 +301,7 @@ const SidebarObject = observer(class SidebarObject extends React.Component<{}, S
 		const sort = storage.sort[this.type];
 
 		if (!sort) {
-			const options = U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact).filter(it => it.isSort);
+			const options = U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact, this.hideSystemTypes, this.hideSystemRelations).filter(it => it.isSort);
 			if (options.length) {
 				this.sortId = options[0].id;
 				this.sortType = options[0].defaultType;
@@ -317,7 +319,7 @@ const SidebarObject = observer(class SidebarObject extends React.Component<{}, S
 		const template = S.Record.getTemplateType();
 		const limit = this.offset + J.Constant.limit.menuRecords;
 		const fileLayouts = [ I.ObjectLayout.File, I.ObjectLayout.Pdf ];
-		const options = U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact);
+		const options = U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact, this.hideSystemTypes, this.hideSystemRelations);
 
 		let sorts: I.Sort[] = [];
 		let filters: I.Filter[] = [
@@ -433,7 +435,7 @@ const SidebarObject = observer(class SidebarObject extends React.Component<{}, S
 	};
 
 	getSortOption () {
-		return U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact).find(it => it.id == this.sortId);
+		return U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact, this.hideSystemTypes, this.hideSystemRelations).find(it => it.id == this.sortId);
 	};
 
 	getRecords () {
@@ -501,8 +503,7 @@ const SidebarObject = observer(class SidebarObject extends React.Component<{}, S
 	onMore (e: any) {
 		e.stopPropagation();
 
-		const options = U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact);
-
+		const options = U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact, this.hideSystemTypes, this.hideSystemRelations);
 		let menuContext = null;
 
 		S.Menu.open('select', {
@@ -526,7 +527,15 @@ const SidebarObject = observer(class SidebarObject extends React.Component<{}, S
 					} else
 					if ([ I.SortId.List, I.SortId.Compact ].includes(item.id)) {
 						this.compact = item.id == I.SortId.Compact;
-						storage.compact = this.compact;						
+						storage.compact = this.compact;
+					} else
+					if ([ I.SortId.SystemTypes ].includes(item.id)) {
+						this.hideSystemTypes = !this.hideSystemTypes;
+						storage.hideSystemTypes = this.hideSystemTypes;
+					} else
+					if ([ I.SortId.SystemRelations ].includes(item.id)) {
+						this.hideSystemRelations = !this.hideSystemRelations;
+						storage.hideSystemRelations = this.hideSystemRelations;
 					}else {
 						this.sortId = item.id;
 						this.sortType = item.type;
@@ -539,7 +548,7 @@ const SidebarObject = observer(class SidebarObject extends React.Component<{}, S
 					this.initStorage();
 					this.load(true);
 
-					const options = U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact);
+					const options = U.Menu.getObjectContainerSortOptions(this.type, this.sortId, this.sortType, this.orphan, this.compact, this.hideSystemTypes, this.hideSystemRelations);
 					
 					menuContext.ref.updateOptions(options);
 				},

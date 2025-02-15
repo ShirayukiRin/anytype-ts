@@ -308,14 +308,16 @@ export interface SearchSubscribeParam {
 };
 
 export enum SortId {
-	All			 = 'all',
-	Orphan		 = 'orphan',
-	Updated		 = 'updated',
-	Created		 = 'created',
-	Name		 = 'name',
-	LastUsed	 = 'lastUsed',
-	List		 = 'list',
-	Compact		 = 'compact',
+	All				= 'all',
+	Orphan			= 'orphan',
+	SystemTypes		= 'systemTypes',
+	SystemRelations = 'systemRelations',
+	Updated			= 'updated',
+	Created			= 'created',
+	Name		 	= 'name',
+	LastUsed		= 'lastUsed',
+	List			= 'list',
+	Compact			= 'compact',
 };
 
 export enum LoaderType {
